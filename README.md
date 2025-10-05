@@ -84,3 +84,4 @@ Notas técnicas y cambios recientes
 - UI: paletas de colores suaves que rotan automáticamente y se guardan en `localStorage`; el
   árbol sintáctico se centra dentro del recuadro grande para facilitar su lectura.
 
+
