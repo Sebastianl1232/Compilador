@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Compilador - demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      /* Variables CSS usadas por las paletas (se sobrescriben dinámicamente) */
+      :root{
+        --bg:#f3f6fb;
+        --card:#ffffff;
+        --muted:#6b7280;
+        --primary:#2563eb;
+        --accent:#06b6d4;
+        --success:#10b981;
+        --danger:#ef4444;
+        --output-bg:#f8fbff;
+        --btn-bg:var(--primary);
+        --btn-text:#ffffff;
+        --border:rgba(15,23,42,0.04);
+        --shadow: 0 6px 18px rgba(16,24,40,0.06);
+        --radius:12px;
+      }
+
+      /* Reset / layout básico */
+      html,body{height:100%;}
+      body{font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,#f6fbff 0%, #f3f6fb 40%, #fbfbfd 100%);color:#0f172a;margin:0;padding:28px}
+      .container{max-width:1100px;margin:0 auto}
+      header{margin-bottom:18px}
+      h1{font-size:28px;margin:0 0 6px;font-weight:700}
+      .lead{color:var(--muted);margin:0 0 18px}
+
+      /* Editor: simple textarea que contiene el código fuente a compilar */
+      .editor-wrap{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:20px}
+      .editor-row{display:block}
+      textarea.code{width:100%;min-height:160px;border:1px solid rgba(15,23,42,0.03);border-radius:8px;padding:12px;font-family:Fira Mono,monospace;font-size:14px;resize:vertical;line-height:1.6}
+      .btn{background:var(--btn-bg);color:var(--btn-text);padding:10px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+      .btn:disabled{opacity:0.6;cursor:not-allowed}
+
+      /* Grid de resultados: a la derecha mostramos el arbol sintactico grande */
+      .grid{display:grid;grid-template-columns:1fr 2fr;gap:18px;margin-top:8px}
+      .card{background:linear-gradient(180deg, var(--card) 0%, #fbfdff 100%);border-radius:12px;padding:18px;box-shadow:var(--shadow);min-height:120px;position:relative;border:1px solid var(--border)}
+      .card.large{min-height:300px}
+      .card.large .output{max-height:520px}
+      .card h3{text-align:center;margin:0 0 12px;color:rgba(15,23,42,0.8);font-weight:700}
+
+      /* Área donde se muestran textos/árboles. Usamos tipografía monoespaciada */
+      .output{background:var(--output-bg);padding:12px;border-radius:8px;font-family:Fira Mono,monospace;white-space:pre-wrap;overflow:auto;max-height:260px;border:1px solid rgba(15,23,42,0.03)}
+
+      /* Centrar visualmente el arbol sintáctico dentro del recuadro grande */
+      .card.large .output{text-align:center;padding-top:20px}
+      .card.large .output pre{display:inline-block;white-space:pre;font-family:Fira Mono,monospace;text-align:left;margin:0}
+
+      /* Badges y botones de copiar */
+      .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px}
+      .badge.ok{background:rgba(16,185,129,0.12);color:var(--success)}
+      .badge.err{background:rgba(239,68,68,0.12);color:var(--danger)}
+
+      .validations{margin-top:16px}
+      .copy-btn{position:absolute;right:14px;top:14px;background:rgba(15,23,42,0.04);border:none;padding:6px 8px;border-radius:8px;font-family:Inter,system-ui;font-size:12px;cursor:pointer;color:var(--muted)}
+
+      @media (max-width:900px){.grid{grid-template-columns:1fr}.editor-row{flex-direction:column}}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Compilador - demo</h1>
+        <p class="lead" style="margin:0">Escribe código en el lenguaje pequeño (asignaciones, expresiones).</p>
+      </header>
+
+      <div class="editor-wrap">
+        <div class="editor-row">
+          <textarea id="code" class="code" placeholder="Escribe tu código aquí..." aria-label="Editor de código"></textarea>
+        </div>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
+          <button id="run" class="btn">Compilar</button>
+          <div id="spinner" class="spinner" aria-hidden="true" style="display:none">
+            <svg width="20" height="20" viewBox="0 0 50 50">
+              <circle cx="25" cy="25" r="20" fill="none" stroke="#0b5fff" stroke-width="4" stroke-linecap="round" stroke-dasharray="31.4 31.4">
+                <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite" />
+              </circle>
+            </svg>
+          </div>
+          <span id="status" style="color:var(--muted)"></span>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Analisis Lexico</h3>
+          <button class="copy-btn" data-target="tokens">Copiar</button>
+          <div id="tokens" class="output">&nbsp;</div>
+        </div>
+
+        <div class="card large">
+          <h3>Analisis Sintactico</h3>
+          <button class="copy-btn" data-target="ast">Copiar</button>
+          <div class="output"><pre id="ast">&nbsp;</pre></div>
+        </div>
+
+        <div class="card">
+          <h3>Analisis Semantico</h3>
+          <button class="copy-btn" data-target="semantic">Copiar</button>
+          <div id="semantic" class="output">&nbsp;</div>
+        </div>
+
+        <div class="card validations">
+          <h3>Validaciones</h3>
+          <button class="copy-btn" data-target="validation">Copiar</button>
+          <div id="validation" class="output">&nbsp;</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+  </body>
+</html>
