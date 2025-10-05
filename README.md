@@ -84,15 +84,3 @@ Notas técnicas y cambios recientes
 - UI: paletas de colores suaves que rotan automáticamente y se guardan en `localStorage`; el
   árbol sintáctico se centra dentro del recuadro grande para facilitar su lectura.
 
-Extensiones sugeridas
----------------------
-
-- Añadir detección de errores léxicos/semánticos más exhaustiva (tipos, re-declaraciones)
-- Sustituir el textarea por un editor embebido (CodeMirror/Monaco) para resaltado y numeración
-- Añadir más tests unitarios que verifiquen AST para expresiones con precedencia y paréntesis
-
-Contacto / Desarrollo
----------------------
-
-Si quieres que documente partes específicas más a fondo (por ejemplo el algoritmo de `to_text_centered` o pruebas unitarias adicionales), dímelo y lo añado.
-
