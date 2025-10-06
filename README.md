@@ -1,5 +1,5 @@
 
-# Compilador sencillo (Python + Flask)
+# CompilaLab
 
 Proyecto educativo que implementa un pipeline de compilación mínimo:
 
