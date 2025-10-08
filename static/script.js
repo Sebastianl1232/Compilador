@@ -60,7 +60,6 @@ try{
   applyPalette(next);
   localStorage.setItem('comp_theme', next);
 }catch(e){ applyPalette('soft'); }
-// Nota: se removió la característica de gutter/line-numbers para mantener
 // el editor simple (textarea). A continuación la funcionalidad de copiar
 // contenido de cualquiera de los paneles usando botones con data-target.
 document.addEventListener('click', (e)=>{
