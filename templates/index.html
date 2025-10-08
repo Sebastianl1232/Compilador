@@ -27,22 +27,23 @@
       html,body{height:100%;}
       /* Fondo de página: usa una imagen si está disponible en static/img/bg.png
          y aplicamos un overlay semitransparente para asegurar contraste del texto. */
-      body{font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;color:#0f172a;margin:0;padding:28px;
-        background-color: #f3f6fb;
-        background-image: url('/static/img/imagen.jpg');
-        background-size: cover;
+      body{font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;color:#0f172a;margin:0;padding:28px;background-color:#f3f6fb;
+        /* Usar la imagen directamente como fondo sin overlay ni gradientes */
+        background-image: url('/static/img/Imagen.jpg');
         background-position: center center;
+        background-size: cover;
+        background-attachment: fixed;
         background-repeat: no-repeat;
       }
-      /* overlay (semi-opaque) para mejorar legibilidad sobre la imagen */
-      body::before{content:'';position:fixed;inset:0;background:rgba(255,255,255,0.85);pointer-events:none;}
       .container{max-width:1100px;margin:0 auto}
       header{margin-bottom:18px}
       h1{font-size:28px;margin:0 0 6px;font-weight:700}
       .lead{color:var(--muted);margin:0 0 18px}
 
       /* Editor: simple textarea que contiene el código fuente a compilar */
-      .editor-wrap{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:20px}
+    /* Asegurar que el editor y las tarjetas tengan fondo sólido/ligeramente opaco
+      para destacar sobre la imagen de fondo */
+    .editor-wrap{background: rgba(255,255,255,0.98);border-radius:var(--radius);box-shadow:0 10px 24px rgba(16,24,40,0.08);padding:18px;margin-bottom:20px}
       .editor-row{display:block}
       textarea.code{width:100%;min-height:160px;border:1px solid rgba(15,23,42,0.03);border-radius:8px;padding:12px;font-family:Fira Mono,monospace;font-size:14px;resize:vertical;line-height:1.6}
       .btn{background:var(--btn-bg);color:var(--btn-text);padding:10px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
@@ -50,13 +51,13 @@
 
       /* Grid de resultados: a la derecha mostramos el arbol sintactico grande */
       .grid{display:grid;grid-template-columns:1fr 2fr;gap:18px;margin-top:8px}
-      .card{background:linear-gradient(180deg, var(--card) 0%, #fbfdff 100%);border-radius:12px;padding:18px;box-shadow:var(--shadow);min-height:120px;position:relative;border:1px solid var(--border)}
+  .card{background: rgba(255,255,255,0.96);border-radius:12px;padding:18px;box-shadow:0 10px 24px rgba(16,24,40,0.06);min-height:120px;position:relative;border:1px solid rgba(15,23,42,0.06)}
       .card.large{min-height:300px}
       .card.large .output{max-height:520px}
       .card h3{text-align:center;margin:0 0 12px;color:rgba(15,23,42,0.8);font-weight:700}
 
       /* Área donde se muestran textos/árboles. Usamos tipografía monoespaciada */
-      .output{background:var(--output-bg);padding:12px;border-radius:8px;font-family:Fira Mono,monospace;white-space:pre-wrap;overflow:auto;max-height:260px;border:1px solid rgba(15,23,42,0.03)}
+  .output{background: rgba(250,248,247,0.98);padding:12px;border-radius:8px;font-family:Fira Mono,monospace;white-space:pre-wrap;overflow:auto;max-height:260px;border:1px solid rgba(15,23,42,0.04);color:#0b1724}
 
       /* Centrar visualmente el arbol sintáctico dentro del recuadro grande */
       .card.large .output{text-align:center;padding-top:20px}
